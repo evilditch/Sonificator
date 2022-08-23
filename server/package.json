@@ -4,6 +4,8 @@
   "description": "Sonify your data",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +17,12 @@
   "bugs": {
     "url": "https://github.com/evilditch/Sonificator/issues"
   },
-  "homepage": "https://github.com/evilditch/Sonificator#readme"
+  "homepage": "https://github.com/evilditch/Sonificator#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1"
+  }
 }

@@ -1,6 +1,7 @@
 const fileRouter = require('express').Router()
+const readFile = require('../readFile')
 
-fileRouter.post('/', (req, res, next) => {
+fileRouter.post('/', async (req, res, next) => {
   if (!req.files) {
     return res.send({
       status: false,
@@ -13,8 +14,10 @@ fileRouter.post('/', (req, res, next) => {
   
   try {
     // tehdään tiedostolle jotain
-    res.status(200).json({ message: `Saatiin tiedosto ${file.name}` })
+    const data = await readFile.parseFile(file)
+    res.status(200).send(data)
   } catch(exception) {
+    res.status(400).json({ error: exception.message })
     next(exception)
   }
 })

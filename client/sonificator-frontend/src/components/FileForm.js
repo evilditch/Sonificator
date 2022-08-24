@@ -12,7 +12,7 @@ const FileForm = ({ handleFile }) => {
   return (
     <form onSubmit={handleSubmit}>
       <label htmlFor='file'>Valitse tiedosto (.csv tai .tsv)</label>
-      <input type='file' id='file' ref={fileInput} accept='.csv,.tsv' />
+      <input type='file' id='file' ref={fileInput} />
       <button type='submit'>Lähetä</button>
     </form>
   )

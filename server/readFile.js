@@ -1,7 +1,9 @@
 const fs = require('fs')
 const { parse } = require('csv-parse')
 
-const parseFile = (file) => {
+const toArray = (file) => {
+  console.log(file.data.toString())
+  
   // check that the file type is accepted (.csv or .tsv), and choose correct delimiter
   const fileType = file.name.split('.')[1]
   let delimiter = ''
@@ -22,17 +24,28 @@ const parseFile = (file) => {
     return Promise.reject(err)
   }
 
-  // eka yritys tiedoston lukemiseen ei toiminut
-  // fs.createReadStream(file.data)
-  //   .pipe(parse({ delimiter: delimiter }))
-  //   .on("data", (row) => {
-  //     console.log(row)
-  //   })
-  //   .on("error", (error) => {
-  //     console.log(error)
-  //     return Promise.reject(error)
-  //   })
-    return Promise.resolve(JSON.stringify({ message: 'tiedosto luettiin' }))
+  const dataStr = file.data.toString()
+
+  // Split data string to array of rows
+  const rows = dataStr.slice(dataStr.indexOf('\n') + 1).split('\n')
+
+  // If the last row in file are empty, remove it from array
+  if (rows[-1] === '' || rows[-1] === undefined) {
+    rows.pop()
+  }
+
+  // Split row strings by delimiter and parse value to float number -> each rows are arrays
+  const rowsArray = rows.map(row => row.split(delimiter).map(value => parseFloat(value)))
+
+  // transposing array to columns -> each array has values of one variable
+  const transpose = (matrix) => {
+    return matrix[0].map((col, i) => matrix.map(row => row[i]))
+  }
+  
+  const data = transpose(rowsArray)
+  console.log(data)
+
+  return Promise.resolve({ data: data, message: 'tiedosto luettiin' })
 }
 
-module.exports = { parseFile }
+module.exports = { toArray }

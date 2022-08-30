@@ -3,8 +3,7 @@ const readFile = require('../readFile')
 
 fileRouter.post('/', async (req, res, next) => {
   if (!req.files) {
-    return res.send({
-      status: false,
+    return res.status(400).json({
       message: 'No file uploaded'
     })
   }
@@ -14,8 +13,8 @@ fileRouter.post('/', async (req, res, next) => {
   
   try {
     // tehdään tiedostolle jotain
-    const data = await readFile.parseFile(file)
-    res.status(200).send(data)
+    const data = await readFile.toArray(file)
+    res.status(200).send(data.message)
   } catch(exception) {
     res.status(400).json({ error: exception.message })
     next(exception)

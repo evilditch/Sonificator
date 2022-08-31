@@ -1,5 +1,7 @@
 const fileRouter = require('express').Router()
 const readFile = require('../readFile')
+const audio = require('../generateAudio')
+const writeWaveFile = require('../writeWaveFile')
 
 fileRouter.post('/', async (req, res, next) => {
   if (!req.files) {
@@ -14,7 +16,18 @@ fileRouter.post('/', async (req, res, next) => {
   try {
     // tehdään tiedostolle jotain
     const data = await readFile.toArray(file)
-    res.status(200).send(data.message)
+    const wave = await audio.sampleA()
+    const waveBuffer = await writeWaveFile.writeFile(wave)
+    console.log(waveBuffer)
+
+    res.status(200)
+    res.set({
+      'Cache-Control': 'no-cache',
+      'Content-Type':  'audio/vnd.wav',
+      'Content-Length': waveBuffer.length,
+      'Content-Disposition': 'attachment; filename=audio.wav'
+    })
+    res.send(Buffer.from(waveBuffer))
   } catch(exception) {
     res.status(400).json({ error: exception.message })
     next(exception)

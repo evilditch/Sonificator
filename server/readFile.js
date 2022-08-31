@@ -30,7 +30,7 @@ const toArray = (file) => {
   const rows = dataStr.slice(dataStr.indexOf('\n') + 1).split('\n')
 
   // If the last row in file are empty, remove it from array
-  if (rows[-1] === '' || rows[-1] === undefined) {
+  if (rows[rows.length-1] === '') {
     rows.pop()
   }
 

@@ -19,7 +19,7 @@ const sampleA = () => {
 
   const wave = Math.sin(2 * Math.PI * frequency * t)
   
-  return wave
+  return Promise.resolve(wave)
 }
 
 module.exports = { sampleA }

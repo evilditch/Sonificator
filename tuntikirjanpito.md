@@ -7,4 +7,5 @@ Päivä | Tuntia | mitä tein
      | 1,5 | Backlogin päivitystä, tiedoston lukemiseen liittyvien ratkaisujen pohdintaa
 30.8. | 2 | Tiedoston data numeeriseksi arrayksi ja sopivaan muotoon
 31.8. | 3,5 | Äänen generointi, yritelmä äänitiedoston palautuksesta
-
+1.9. | 2 | Epätoivoista yritystä saada äänitiedosto tallennettua ja lähetettyä, ei onnistu
+16.9. | 1,5 | Serverin vaihto Nodesta Pythoniksi. SonifyTool tuottaa ääntä.

@@ -25,7 +25,7 @@ fileRouter.post('/', async (req, res, next) => {
       'Cache-Control': 'no-cache',
       'Content-Type':  'audio/vnd.wav',
       'Content-Length': waveBuffer.length,
-      'Content-Disposition': 'attachment; filename=audio.wav'
+      'Content-Disposition': 'attachment; filename="audio.wav"'
     })
     res.send(Buffer.from(waveBuffer))
   } catch(exception) {

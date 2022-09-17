@@ -3,7 +3,7 @@ import simpleaudio as sa
 
 class Sonification:
     def __init__(self):
-        self.x = np.linspace(0, 5, 100)
+        self.x = np.linspace(0, 20, 200)
         self.y = np.sin(self.x)
         print(len(self.y))
         self.rate = 48000 # samples per seconds
@@ -22,11 +22,19 @@ class Sonification:
         return frequence
 
     def generateSamples(self):
-        t = np.linspace(0, self.duration, int(self.duration*self.rate))
+        t = np.linspace(0, self.duration, int(self.duration * self.rate))
         frequences = np.repeat(self.pitches(), len(t)/len(self.y))
         print(len(frequences), len(t))
         
-        samples = np.sin(2 * np.pi * t * frequences)
+        phase = 0.0
+        phaseResult = np.array([])
+
+        for freq in frequences:
+            phStep = 2 * np.pi * freq * 1/self.rate
+            phase += phStep
+            phaseResult = np.append(phaseResult, phase)
+            
+        samples = np.sin(phaseResult)
         return samples
         
 

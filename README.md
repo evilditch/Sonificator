@@ -4,6 +4,12 @@ Make sonifications from numeral data (csv format)
 
 ## To-do 
 
+Python SonificationTool:
+- annetun numeerisen datan sonifikointi
+- mahdollisuus määrittää ääneen liittyviä muuttujia
+- eri tyyppiset sonifikaatiot
+
+Jossain vaiheessa:
 - tiedoston datan lukeminen ja muuntaminen sopivaan muotoon matemaattista käsittelyä varten 
 - muutama valmis csv-tiedosto serverille (iris, ympyrä, sini, ihan vaan joku viiva tai muu käyrä)
   - valmiille tiedostoille valitsimet käyttöliittymään

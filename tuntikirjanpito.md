@@ -9,3 +9,5 @@ Päivä | Tuntia | mitä tein
 31.8. | 3,5 | Äänen generointi, yritelmä äänitiedoston palautuksesta
 1.9. | 2 | Epätoivoista yritystä saada äänitiedosto tallennettua ja lähetettyä, ei onnistu
 16.9. | 1,5 | Serverin vaihto Nodesta Pythoniksi. SonifyTool tuottaa ääntä.
+      | 1,5 | Generoidun äänen napsahduksien poistoyritys, epäonnistui.
+17.9. | 1,5 | Sini-aallon vaiheistus niin, että napsahdukset äänestä poistuu

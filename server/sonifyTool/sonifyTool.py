@@ -1,5 +1,7 @@
 import numpy as np
 import simpleaudio as sa
+from datetime import date
+from scipy.io import wavfile
 
 class Sonification:
     def __init__(self, data=None, duration=5, rate=48000):
@@ -16,12 +18,7 @@ class Sonification:
         print(len(self.y))
         self.rate = rate # samples per seconds
         self.duration = duration #total duration in seconds
-        
-        # t = np.linspace(0, self.duration, int(self.duration*self.rate))
-        # frequences = np.repeat(self.pitches(), len(t)/len(self.y))
-        # print(len(frequences), len(t))
-        
-        # self.samples = np.sin(2 * np.pi * t * frequences)
+                
         self.samples = self.generateSamples()
         
     def pitches(self):
@@ -43,24 +40,30 @@ class Sonification:
             phaseResult = np.append(phaseResult, phase)
             
         samples = np.sin(phaseResult)
-        return samples
+        return self.toInt16(samples)
         
 
     def play(self):
-        sample = self.toInt16()
+        # sample = self.toInt16()
         
-        play_obj = sa.play_buffer(sample, 2, 2, self.rate)
+        play_obj = sa.play_buffer(self.samples, 2, 2, self.rate)
 
         # Wait for playback to finish before exiting
         play_obj.wait_done()
         return
             
             
-    def toInt16(self):
+    def toInt16(self, samples):
         # Ensure that highest value is in 16-bit range
-        sample = self.samples * 32767 / np.max(np.abs(self.samples))
+        samples = samples * 32767 / np.max(np.abs(samples))
 
         # Convert to 16-bit data
-        sample = sample.astype(np.int16)
+        samples = samples.astype(np.int16)
     
-        return sample
+        return samples
+
+    def save(self, filename='sonification'+str(date.today())):
+        filename = filename + '.wav'
+
+        wavfile.write(filename, self.rate, self.samples)
+        return

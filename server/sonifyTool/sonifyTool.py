@@ -2,12 +2,20 @@ import numpy as np
 import simpleaudio as sa
 
 class Sonification:
-    def __init__(self):
-        self.x = np.linspace(0, 20, 200)
-        self.y = np.sin(self.x)
+    def __init__(self, data=None, duration=5, rate=48000):
+        if data is not None:
+            data = np.array(data)
+            if data.ndim ==1:
+                self.y = data
+            else:
+                print("Can't handle %s dimensional data yet" % data.ndim)
+        else:
+            self.x = np.linspace(0, 20, 200)
+            self.y = np.sin(self.x)
+
         print(len(self.y))
-        self.rate = 48000 # samples per seconds
-        self.duration = 5 #total duration in seconds
+        self.rate = rate # samples per seconds
+        self.duration = duration #total duration in seconds
         
         # t = np.linspace(0, self.duration, int(self.duration*self.rate))
         # frequences = np.repeat(self.pitches(), len(t)/len(self.y))

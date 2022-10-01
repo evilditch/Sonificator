@@ -11,3 +11,4 @@ Päivä | Tuntia | mitä tein
 16.9. | 1,5 | Serverin vaihto Nodesta Pythoniksi. SonifyTool tuottaa ääntä.
       | 1,5 | Generoidun äänen napsahduksien poistoyritys, epäonnistui.
 17.9. | 1,5 | Sini-aallon vaiheistus niin, että napsahdukset äänestä poistuu
+1.10. | 0.5 | Parametrina annetun vektorin sonifikointi 

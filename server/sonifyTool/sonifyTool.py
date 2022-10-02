@@ -29,6 +29,10 @@ class Sonification:
     def generateSamples(self):
         t = np.linspace(0, self.duration, int(self.duration * self.rate))
         frequences = np.repeat(self.pitches(), len(t)/len(self.y))
+
+        if len(frequences) < len(t):
+            frequences = np.append(frequences, np.zeros(len(t)-len(frequences)))
+
         print(len(frequences), len(t))
         
         phase = 0.0
@@ -46,13 +50,13 @@ class Sonification:
     def play(self):
         # sample = self.toInt16()
         
-        play_obj = sa.play_buffer(self.samples, 2, 2, self.rate)
+        play_obj = sa.play_buffer(self.samples, 1, 2, self.rate)
 
         # Wait for playback to finish before exiting
         play_obj.wait_done()
         return
-            
-            
+
+
     def toInt16(self, samples):
         # Ensure that highest value is in 16-bit range
         samples = samples * 32767 / np.max(np.abs(samples))

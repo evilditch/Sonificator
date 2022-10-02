@@ -13,3 +13,4 @@ Päivä | Tuntia | mitä tein
 17.9. | 1,5 | Sini-aallon vaiheistus niin, että napsahdukset äänestä poistuu
 1.10. | 0.5 | Parametrina annetun vektorin sonifikointi 
       | 0.5 | Sonifikaation tallennus .wav-tiedostoksi
+2.10. | 0.5 | Sonifikaatiossa virheenkorjauksia

@@ -14,3 +14,5 @@ Päivä | Tuntia | mitä tein
 1.10. | 0.5 | Parametrina annetun vektorin sonifikointi 
       | 0.5 | Sonifikaation tallennus .wav-tiedostoksi
 2.10. | 0.5 | Sonifikaatiossa virheenkorjauksia
+      | 2.5 | Alaluokka 'Multisonification', useampi sonifikaatio soitetaan samaan aikaan
+

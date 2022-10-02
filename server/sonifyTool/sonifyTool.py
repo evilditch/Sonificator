@@ -71,3 +71,36 @@ class Sonification:
 
         wavfile.write(filename, self.rate, self.samples)
         return
+
+class Multisonification(Sonification):
+    def __init__(self, *sonifications):
+        self.sonifications = sonifications
+        self.rate = self.checkRate()
+        self.samples = self.mixSamples()
+
+    def checkRate(self):
+        for i in range(len(self.sonifications)-1):
+            if self.sonifications[i].rate != self.sonifications[i+1].rate:
+                raise Exception('All sonifications must have the same sample rate')
+
+        return self.sonifications[0].rate
+
+    def mixSamples(self):
+        length = 0
+        
+        # looking for the longest sonification
+        for sony in self.sonifications:
+            if len(sony.samples) > length:
+                length = len(sony.samples)
+
+        # creating a list of sonification samples, adding zeros to end if length is less than longest length
+        samples = []
+        for sony in self.sonifications:
+            samples.append(np.append(sony.samples, np.zeros(length - len(sony.samples))))
+        
+        mixedSamples = sum(samples)
+        mixedSamples = mixedSamples * 0.1 / np.max(mixedSamples)
+        
+        return self.toInt16(mixedSamples)
+
+

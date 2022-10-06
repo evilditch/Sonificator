@@ -15,4 +15,4 @@ Päivä | Tuntia | mitä tein
       | 0.5 | Sonifikaation tallennus .wav-tiedostoksi
 2.10. | 0.5 | Sonifikaatiossa virheenkorjauksia
       | 2.5 | Alaluokka 'Multisonification', useampi sonifikaatio soitetaan samaan aikaan
-
+3.10. | 2 | Wavetable-syntetisoinnin testailua.

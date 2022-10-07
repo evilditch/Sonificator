@@ -16,3 +16,6 @@ Päivä | Tuntia | mitä tein
 2.10. | 0.5 | Sonifikaatiossa virheenkorjauksia
       | 2.5 | Alaluokka 'Multisonification', useampi sonifikaatio soitetaan samaan aikaan
 3.10. | 2 | Wavetable-syntetisoinnin testailua.
+6.10. | 2 | Aloitettu "scatterplot". Sini-aallon lisäksi saa kanttiaaltoääntä.
+7.10. | 2 | Scatterplotin toteutukselle jatkoa. Datan arvojen skaalaus, jotta muutokset kuuluu paremmin äänenkorkeuksissa.
+

@@ -150,7 +150,7 @@ class Multisonification(Sonification):
 
 
 class ScatterSonification(Sonification):
-    def __init__(self, data=None, x=0, y=1, valuetime=None):
+    def __init__(self, data=None, x=0, y=1, valuetime=0.02, scale=None):
         try:
             self.x = data[x]
             self.y = data[y]
@@ -163,7 +163,7 @@ class ScatterSonification(Sonification):
             else:
                 raise Exception('Valuetime must be None or float (seconds)')
         # numpy.argsort(x) kertoo meille, mihin järjestykseen arvot pitää pistää
-        Sonification.__init__(self, data)
+        Sonification.__init__(self, data, scale=scale)
         
 
     def generateSamples(self):
@@ -171,15 +171,61 @@ class ScatterSonification(Sonification):
         
         # timeX = np.linspace(np.min(x), np.max(x)+1, np.max(x))
 
-        if self.valuetime is not None:
-            self.duration = self.valuetime * len(x)
+        startTimes = self.getStartTimes(x)
+        print('start times:', startTimes)
+
+        yFrequences = self.pitches(y)
+        print('frequences:', yFrequences)
+
+        samples = map(self.getPlib, starttimes, yFrequences)
+
+        # self.duration = self.valuetime * len(x)
             
         # scaling x between 0 to duration
-        x = (x - np.min(x)) / (np.max(x) - np.min(x)) * self.duration
+        # x = (x - np.min(x)) / (np.max(x) - np.min(x)) * self.duration
 
-        t = np.linspace(0, self.duration, int(self.duration * self.rate))
+         # that = np.linspace(0, self.duration, int(self.duration * self.rate))
         
+        # yhden äänen pituus sampleina
+        # oneSoundLen = len(t) /
+        
+        # index = 1
+        
+        # phase = 0.0
+        # phaserResult = []
+
+        # arr[i:i+len(plus)] = arr[i:i+len(plus)]+plus
+        
+        # while index <= len(t):
             
+        
     def sortXY(self):
         i = np.argsort(self.x)
         return self.x[i], self.y[i]
+
+    def getStartTimes(self, x):
+        dx = abs(x[0] - x[-1])
+        scale = float(dx) / float((self.duration * 1000))
+        
+        subtract = np.subtract(x[1:], x[0:-1])
+        
+        min = np.min(subtract[np.nonzero(subtract)])
+        max = np.max(subtract)
+        
+        timeMin = min / scale
+        timeMax = max / scale
+        timeTotal = np.max(x) / scale
+
+        durations = subtract / scale 
+        startTimes = (x - np.min(x)) /         (scale * 1000) # in seconds
+
+        return startTimes
+
+
+    def pitches(self, y):
+        frequence = 120
+        
+        # scaling data with self.scale and between 0 to 6
+        values = (y -self.scale[0]) / (self.scale[1] - self.scale[0]) * 5
+        frequence *= 1.6**values
+        return frequence

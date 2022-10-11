@@ -18,4 +18,4 @@ Päivä | Tuntia | mitä tein
 3.10. | 2 | Wavetable-syntetisoinnin testailua.
 6.10. | 2 | Aloitettu "scatterplot". Sini-aallon lisäksi saa kanttiaaltoääntä.
 7.10. | 2 | Scatterplotin toteutukselle jatkoa. Datan arvojen skaalaus, jotta muutokset kuuluu paremmin äänenkorkeuksissa.
-
+11.10. | 1.5 | Scatterplotin toteutukselle jatkoa.

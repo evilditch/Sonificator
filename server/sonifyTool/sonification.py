@@ -4,6 +4,15 @@ from datetime import date
 from scipy.io import wavfile
 from scipy import signal
 
+def findIndex(x, xs):
+    # Find the index corresponding to a given value in an array.
+    n = len(xs)
+    start = xs[0]
+    end = xs[-1]
+    i = round((n - 1) * (x - start) / (end - start))
+    return int(i)
+
+
 class Sonification:
     # parameters:
     # data: None or array. If None, generate sine wave to data
@@ -150,7 +159,7 @@ class Multisonification(Sonification):
 
 
 class ScatterSonification(Sonification):
-    def __init__(self, data=None, x=0, y=1, valuetime=0.02, scale=None):
+    def __init__(self, data=None, x=0, y=1, plibtime=0.2, scale=None, duration=5):
         try:
             self.x = data[x]
             self.y = data[y]
@@ -158,12 +167,9 @@ class ScatterSonification(Sonification):
             print('jokin meni vikaan')
             print(err)
             # raise Exeption('both x (time) and y (values) are required')
-            if valuetime is None or isinstance(valuetime, float):
-                self.valuetime = valuetime        
-            else:
-                raise Exception('Valuetime must be None or float (seconds)')
+        self.plibtime = plibtime        
         # numpy.argsort(x) kertoo meille, mihin järjestykseen arvot pitää pistää
-        Sonification.__init__(self, data, scale=scale)
+        Sonification.__init__(self, data, scale=scale, duration=duration)
         
 
     def generateSamples(self):
@@ -177,28 +183,13 @@ class ScatterSonification(Sonification):
         yFrequences = self.pitches(y)
         print('frequences:', yFrequences)
 
-        samples = map(self.getPlib, starttimes, yFrequences)
+        plibs = map(self.makePlib, startTimes, yFrequences)
 
-        # self.duration = self.valuetime * len(x)
-            
-        # scaling x between 0 to duration
-        # x = (x - np.min(x)) / (np.max(x) - np.min(x)) * self.duration
+        sumPlibs = sum(plibs)
+        samples = sumPlibs.samples
+        
+        return self.toInt16(samples)
 
-         # that = np.linspace(0, self.duration, int(self.duration * self.rate))
-        
-        # yhden äänen pituus sampleina
-        # oneSoundLen = len(t) /
-        
-        # index = 1
-        
-        # phase = 0.0
-        # phaserResult = []
-
-        # arr[i:i+len(plus)] = arr[i:i+len(plus)]+plus
-        
-        # while index <= len(t):
-            
-        
     def sortXY(self):
         i = np.argsort(self.x)
         return self.x[i], self.y[i]
@@ -229,3 +220,58 @@ class ScatterSonification(Sonification):
         values = (y -self.scale[0]) / (self.scale[1] - self.scale[0]) * 5
         frequence *= 1.6**values
         return frequence
+
+    def makePlib(self, startTime, frequency):
+        # luodaan yksi yksittäinen ääni. t alkaa äänen aloitushetkestä.
+
+        n = round(self.plibtime * self.rate)
+        t = startTime + np.arange(n) / self.rate
+        
+        phases = 2 * np.pi * frequency * t
+        
+        samples = np.sin(phases)
+        return Plib(samples, t=t, rate=self.rate)
+
+
+class Plib:
+    def __init__(self, samples, t=None, rate=48000):
+        self.samples = np.asarray(samples)
+        self.rate = rate
+        if t is not None:
+            self.t = np.asarray(t)
+        else:
+            self.t = np.arange(len(samples)) / self.rate
+
+    @property
+    def start(self):
+        return self.t[0]
+        
+    @property
+    def end(self):
+        return self.t[-1]
+        
+    def __add__(self, other):
+        if other == 0:
+            return self
+
+        if self.rate != other.rate:
+            raise Exception('sample rate must be same')
+
+        start = min(self.start, other.start)
+        end = max(self.end, other.end)
+        n = int(round((end - start) * self.rate)) + 1
+        samples = np.zeros(n)
+        t = start + np.arange(n) / self.rate
+        
+        def addPlib(plib):
+            i = findIndex(plib.start, t)
+            
+            j = i + len(plib.samples)
+            samples[i:j] += plib.samples
+
+        addPlib(self)
+        addPlib(other)
+        
+        return Plib(samples, t, self.rate)
+        
+    __radd__ = __add__

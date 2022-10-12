@@ -1,6 +1,8 @@
 # Sonificator
 Make sonifications from numeral data (csv format)
 
+Scatterplotin sonifikoinnin mallina [soni-py](https://github.com/lockepatton/sonipy), by Locke Patton and Emily Levesque.
+
 
 ## To-do 
 

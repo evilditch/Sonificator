@@ -19,4 +19,5 @@ Päivä | Tuntia | mitä tein
 6.10. | 2 | Aloitettu "scatterplot". Sini-aallon lisäksi saa kanttiaaltoääntä.
 7.10. | 2 | Scatterplotin toteutukselle jatkoa. Datan arvojen skaalaus, jotta muutokset kuuluu paremmin äänenkorkeuksissa.
 11.10. | 1.5 | Scatterplotin toteutukselle jatkoa.
-12.10. | 2 | Toimiva scatterplotin sonifikaatio. Eriytetty yksittäinen arvon ääni omaksi luokakseen 'Plib'.
+12.10. | 2 | Toimiva scatterplotin sonifikaatio. Scatterplotin yksittäinen arvon ääni omassa luokassa 'Plib'.
+       | 1 | "viivan" sonifikaatio; parametrina annettujen yksittäisten pisteiden välille lineaarisesti luotu arvoja.

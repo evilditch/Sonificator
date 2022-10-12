@@ -157,6 +157,52 @@ class Multisonification(Sonification):
         
         return self.toInt16(mixedSamples)
 
+class Line(Sonification):
+    def __init__(self, data=None, duration=5, rate=48000, sound='sine', scale=None):
+        Sonification.__init__(self, data, scale=scale, duration=duration, sound=sound)
+
+    def generateSamples(self):
+        frequences = self.pitches()
+        
+        phase = 0.0
+        phaseResult = np.array([])
+
+        for freq in frequences:
+            phStep = 2 * np.pi * freq * 1/self.rate
+            phase += phStep
+            phaseResult = np.append(phaseResult, phase)
+
+        sine = np.sin(phaseResult)
+
+        if self.sound == 'sine':
+            samples = sine
+        elif self.sound == 'square':
+            print(self.sound)
+            samples = signal.square(2 * np.pi * 30 * t, duty=(sine + 1)/2)
+            # samples = signal.square(2 * np.pi * t, duty=phaseResult)
+        elif self.sound == 'harmonic':
+            samples = sine + (0.2 * 2* sine) + (0.8 * 3 * sine) + (0.5 * 8 * sine)
+        else:
+            print('not supported sound type')
+            return []
+        
+        return self.toInt16(samples)
+        
+
+    def pitches(self):
+        frequences = super().pitches()
+
+        n = round((self.duration * self.rate) / len(frequences)) - 1
+        print(n)
+        linearFrequences = np.array([])
+        
+        for i in range(len(frequences) - 1):
+            linearFrequences = np.append(linearFrequences, np.linspace(frequences[i], frequences[i+1], n, endpoint=False))
+            print(len(linearFrequences))
+            
+        linearFrequences = np.append(linearFrequences, frequences[-1])
+        print(self.duration*self.rate, len(linearFrequences))
+        return linearFrequences
 
 class ScatterSonification(Sonification):
     def __init__(self, data=None, x=0, y=1, plibtime=0.2, scale=None, duration=5):

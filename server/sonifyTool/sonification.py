@@ -3,6 +3,7 @@ import simpleaudio as sa
 from datetime import date
 from scipy.io import wavfile
 from scipy import signal
+from sklearn.linear_model import LinearRegression
 
 def findIndex(x, xs):
     # Find the index corresponding to a given value in an array.
@@ -234,7 +235,7 @@ class Line(Sonification):
         return linearFrequences
 
 class ScatterSonification(Sonification):
-    def __init__(self, data=None, x=0, y=1, plibtime=0.2, scale=None, duration=5, sound='sine'):
+    def __init__(self, data=None, x=0, y=1, plibtime=0.1, scale=None, duration=5, sound='sine'):
         try:
             self.x = np.asarray(data[x])
             self.y = np.asarray(data[y])
@@ -307,7 +308,6 @@ class ScatterSonification(Sonification):
         samples = self.func(phases)
         return Plib(samples, t=t, rate=self.rate)
 
-
 class Plib:
     def __init__(self, samples, t=None, rate=48000):
         self.samples = np.asarray(samples)
@@ -350,3 +350,31 @@ class Plib:
         return Plib(samples, t, self.rate)
         
     __radd__ = __add__
+    
+class RegplotSonification(Multisonification):
+    # yhdistetään 'scatterplot' ja datasta laskettu 'trendline' 
+    
+    def __init__(self, x=0, y=1, data=None, scale=None, sound='sine', rate=480000, duration=5, plibtime=0.1):
+        self.duration = duration
+        self.rate = rate
+        self.scale = scale
+        self.sound = sound
+
+        self.scatter = ScatterSonification(data=data, x=x, y=y, scale=scale, duration=duration, sound=sound, plibtime=plibtime)
+        self.x, self.y = self.scatter.sortXY()
+
+        self.line = self.trendline()
+
+        Multisonification.__init__(self, self.scatter, self.line)
+
+    def trendline(self):
+        trend = LinearRegression().fit(self.x.reshape(-1, 1), self.y)
+        trendLine = trend.predict(self.x.reshape(-1, 1))
+        
+        return Line(data=trendLine, scale=self.scale, duration=self.duration, sound=self.sound, rate=self.rate)
+        
+    def playScatter(self):
+        self.scatter.play()
+        
+    def playTrendline(self):
+        self.line.play()

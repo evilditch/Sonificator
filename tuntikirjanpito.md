@@ -22,3 +22,4 @@ Päivä | Tuntia | mitä tein
 12.10. | 2 | Toimiva scatterplotin sonifikaatio. Scatterplotin yksittäinen arvon ääni omassa luokassa 'Plib'.
        | 1 | "viivan" sonifikaatio; parametrina annettujen yksittäisten pisteiden välille lineaarisesti luotu arvoja.
 13.10. | 1.5 | Korjattuja bugeja, pientä koodin uudelleenjärjestelyä.
+       | 1.5 | Luokka 'Regplot'; sonifikaatio, jossa yhdistyy scatterplot ja datasta laskettu "trendline".

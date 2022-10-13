@@ -23,3 +23,4 @@ Päivä | Tuntia | mitä tein
        | 1 | "viivan" sonifikaatio; parametrina annettujen yksittäisten pisteiden välille lineaarisesti luotu arvoja.
 13.10. | 1.5 | Korjattuja bugeja, pientä koodin uudelleenjärjestelyä.
        | 1.5 | Luokka 'Regplot'; sonifikaatio, jossa yhdistyy scatterplot ja datasta laskettu "trendline".
+       | 0.5 | 'Trendlinen' korjaus, säilytetään vain uniikit arvot

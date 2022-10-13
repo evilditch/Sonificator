@@ -368,9 +368,12 @@ class RegplotSonification(Multisonification):
         Multisonification.__init__(self, self.scatter, self.line)
 
     def trendline(self):
-        trend = LinearRegression().fit(self.x.reshape(-1, 1), self.y)
-        trendLine = trend.predict(self.x.reshape(-1, 1))
-        
+        # trend = LinearRegression().fit(self.x.reshape(-1, 1), self.y)
+        # trendLine = trend.predict(self.x.reshape(-1, 1))
+        z = np.polyfit(x, y, 1)
+        p = np.polyd1(z)
+        trendLine = np.unique(p(x))
+
         return Line(data=trendLine, scale=self.scale, duration=self.duration, sound=self.sound, rate=self.rate)
         
     def playScatter(self):

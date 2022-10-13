@@ -21,3 +21,4 @@ Päivä | Tuntia | mitä tein
 11.10. | 1.5 | Scatterplotin toteutukselle jatkoa.
 12.10. | 2 | Toimiva scatterplotin sonifikaatio. Scatterplotin yksittäinen arvon ääni omassa luokassa 'Plib'.
        | 1 | "viivan" sonifikaatio; parametrina annettujen yksittäisten pisteiden välille lineaarisesti luotu arvoja.
+13.10. | 1.5 | Korjattuja bugeja, pientä koodin uudelleenjärjestelyä.

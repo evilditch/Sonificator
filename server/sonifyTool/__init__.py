@@ -1,2 +1,1 @@
-from .sonification import Sonification, Multisonification
-
+from .sonification import Sonification, Multisonification, Line, ScatterSonification

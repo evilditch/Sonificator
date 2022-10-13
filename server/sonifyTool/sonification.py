@@ -41,7 +41,23 @@ class Sonification:
             self.scale = scale
         else:
             self.scale = (np.min(self.y), np.max(self.y))
-                
+        
+        if sound == 'sine':
+            self.func = np.sin
+        elif sound == 'cos':
+            self.func = np.cos
+        elif sound == 'sinc':
+            self.func = np.sinc
+        elif sound == 'square':
+            self.func = self.squareSamples
+        elif sound== 'saw':
+            self.func = self.sawtoothSamples
+        elif sound == 'triangle':
+            self.func = self.triangleSamples
+        else:
+            print("Dont supported sound type {}. Using 'sine'".format(sound))
+            self.func = np.sin
+
         self.samples = self.generateSamples()
         
     def pitches(self):
@@ -69,19 +85,21 @@ class Sonification:
             phase += phStep
             phaseResult = np.append(phaseResult, phase)
 
-        sine = np.sin(phaseResult)
-
-        if self.sound == 'sine':
-            samples = sine
-        elif self.sound == 'square':
-            print(self.sound)
-            samples = signal.square(2 * np.pi * 30 * t, duty=(sine + 1)/2)
-            # samples = signal.square(2 * np.pi * t, duty=phaseResult)
-        elif self.sound == 'harmonic':
-            samples = sine + (0.2 * 2* sine) + (0.8 * 3 * sine) + (0.5 * 8 * sine)
-        else:
-            print('not supported sound type')
-            return []
+        # sine = np.sin(phaseResult)
+        #
+        # if self.sound == 'sine':
+        #     samples = sine
+        # elif self.sound == 'square':
+        #     print(self.sound)
+        #     samples = signal.square(2 * np.pi * 30 * t, duty=(sine + 1)/2)
+        #     # samples = signal.square(2 * np.pi * t, duty=phaseResult)
+        # elif self.sound == 'harmonic':
+        #     samples = sine + (0.2 * 2* sine) + (0.8 * 3 * sine) + (0.5 * 8 * sine)
+        # else:
+        #     print('not supported sound type')
+        #     return []
+        
+        samples = self.func(phaseResult)
         
         return self.toInt16(samples)
         
@@ -98,8 +116,16 @@ class Sonification:
         samples = np.sin(phaseResult)
         return samples
         
-    def getSquareSamples(self, t, frequences):
-        return scipy.signal.square(t, duty=frequences)
+    def squareSamples(self, phases):
+        t = np.linspace(0, self.duration, int(self.duration * self.rate))
+        return  0.001 * signal.square(2 * np.pi * 30 * t, duty=(np.sin(phases) + 1)/2)
+
+    def sawtoothSamples(self, phases):
+        # t = np.linspace(0, self.duration, int(self.duration * self.rate))
+        return signal.sawtooth(2 * np.pi * phases)
+
+    def triangleSamples(self, phases):
+        return signal.sawtooth(2 * np.pi * phases, width=0.5)
 
     def play(self):
         # sample = self.toInt16()
@@ -172,50 +198,52 @@ class Line(Sonification):
             phase += phStep
             phaseResult = np.append(phaseResult, phase)
 
-        sine = np.sin(phaseResult)
+        # sine = np.sin(phaseResult)
+        #
+        # if self.sound == 'sine':
+        #     samples = sine
+        # elif self.sound == 'square':
+        #     print(self.sound)
+        #     samples = signal.square(2 * np.pi * 30 * t, duty=(sine + 1)/2)
+        #     # samples = signal.square(2 * np.pi * t, duty=phaseResult)
+        # elif self.sound == 'harmonic':
+        #     samples = sine + (0.2 * 2* sine) + (0.8 * 3 * sine) + (0.5 * 8 * sine)
+        # else:
+        #     print('not supported sound type')
+        #     return []
 
-        if self.sound == 'sine':
-            samples = sine
-        elif self.sound == 'square':
-            print(self.sound)
-            samples = signal.square(2 * np.pi * 30 * t, duty=(sine + 1)/2)
-            # samples = signal.square(2 * np.pi * t, duty=phaseResult)
-        elif self.sound == 'harmonic':
-            samples = sine + (0.2 * 2* sine) + (0.8 * 3 * sine) + (0.5 * 8 * sine)
-        else:
-            print('not supported sound type')
-            return []
-        
+        samples = self.func(phaseResult)
+
         return self.toInt16(samples)
         
 
     def pitches(self):
         frequences = super().pitches()
 
-        n = round((self.duration * self.rate) / len(frequences)) - 1
+        n = round((self.duration * self.rate) / (len(frequences) -1)) 
         print(n)
         linearFrequences = np.array([])
         
         for i in range(len(frequences) - 1):
             linearFrequences = np.append(linearFrequences, np.linspace(frequences[i], frequences[i+1], n, endpoint=False))
-            print(len(linearFrequences))
+            # print(len(linearFrequences))
             
         linearFrequences = np.append(linearFrequences, frequences[-1])
         print(self.duration*self.rate, len(linearFrequences))
         return linearFrequences
 
 class ScatterSonification(Sonification):
-    def __init__(self, data=None, x=0, y=1, plibtime=0.2, scale=None, duration=5):
+    def __init__(self, data=None, x=0, y=1, plibtime=0.2, scale=None, duration=5, sound='sine'):
         try:
-            self.x = data[x]
-            self.y = data[y]
+            self.x = np.asarray(data[x])
+            self.y = np.asarray(data[y])
         except BaseException as err:
             print('jokin meni vikaan')
             print(err)
             # raise Exeption('both x (time) and y (values) are required')
         self.plibtime = plibtime        
         # numpy.argsort(x) kertoo meille, mihin järjestykseen arvot pitää pistää
-        Sonification.__init__(self, data, scale=scale, duration=duration)
+        Sonification.__init__(self, data, scale=scale, duration=duration, sound=sound)
         
 
     def generateSamples(self):
@@ -275,7 +303,7 @@ class ScatterSonification(Sonification):
         
         phases = 2 * np.pi * frequency * t
         
-        samples = np.sin(phases)
+        samples = self.func(phases)
         return Plib(samples, t=t, rate=self.rate)
 
 

@@ -64,7 +64,8 @@ class Sonification:
         frequence = 120
         
         # scaling data with self.scale and between 0 to 6
-        values = (self.y -self.scale[0]) / (self.scale[1] - self.scale[0]) * 5
+        values = (self.y -self.scale[0]) / (self.scale[1] - self.scale[0]) * 3.5
+        # values = self.y
         frequence *= 1.6**values
         return frequence
 
